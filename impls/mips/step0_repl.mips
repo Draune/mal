@@ -1,0 +1,39 @@
+.data
+prompt:
+    .asciiz "user>"
+
+input:
+    .space 1024
+
+.text
+
+READ:
+    addi $a0, $zero, input
+    addi $a1, $zero, 1024
+    addi $v0, $zero, 8 # read string > $a0 & size buffer = $a1
+    syscall
+    jr $ra
+
+EOF:
+    li $t0,0
+lEOF:
+    lb $t1, $t0($a0)
+
+    addi
+    jr $ra
+
+EVAL:
+    jr $ra
+
+PRINT:
+    jr $ra
+
+rep:
+    # prompt
+    addi $v0, $zero, 4 # print string
+    addi $a0, $zero, prompt
+    syscall
+    jal READ
+    jal EVAL
+    jal PRINT
+    j rep
