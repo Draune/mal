@@ -1,13 +1,12 @@
 STEPS = step0_repl 
 
-COMPONENTS =
-
-
 all: $(STEPS)
 
-%: %.mips $(COMPONENTS)
-	mips-linux-gnu-ld -o $@ $<
+%.o: %.mips
+	mips-linux-gnu-as -o $@ $<
 
+%: %.o
+	mips-linux-gnu-gcc -o $@ $< -static 
 .PHONY: clean
 clean:
 	rm -f $(STEPS) $(STEPS:%=%.o)

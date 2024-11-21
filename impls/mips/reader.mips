@@ -1,0 +1,38 @@
+tokenize:                               # puts in the stack the list of strings from a0
+    move    $t0,    $a0
+    addi    $t0,    -1
+loop_tokenize:
+    addiu   $t0,    1
+    lb      $t1,    0($t0)
+    li      $t2,    0x20
+    ble     $t1,    $t2,    white_space
+    li      $t2,    0x2C
+    beq     $t1,    $t2,    white_space
+    li      $t2,    0x5B
+    beq     $t1,    $t2,    single_char
+    li      $t2,    0x5D
+    beq     $t1,    $t2,    single_char
+    li      $t2,    0x7B
+    beq     $t1,    $t2,    single_char
+    li      $t2,    0x7D
+    beq     $t1,    $t2,    single_char
+    li      $t2,    0x28
+    beq     $t1,    $t2,    single_char
+    li      $t2,    0x29
+    beq     $t1,    $t2,    single_char
+    li      $t2,    0x27
+    beq     $t1,    $t2,    single_char
+    li      $t2,    0x60
+    beq     $t1,    $t2,    single_char
+    li      $t2,    0x5E
+    beq     $t1,    $t2,    single_char
+    li      $t2,    0x40
+    beq     $t1,    $t2,    single_char
+    # manque le cas ~ et ~@
+
+white_space:
+    j loop_tokenize
+
+
+read_form:
+read_str:

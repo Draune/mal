@@ -1,39 +1,93 @@
-.data
-prompt:
-    .asciiz "user>"
 
-input:
-    .space 1024
+    .section    .text
 
-.text
+read_line:
+    addi    $sp,        $sp,            -4
+    sw      $ra,        0($sp)
+
+    la      $a0,        scan_string
+    la      $a1,        input
+    addi    $sp,        $sp,            -64
+    nop
+    jal     scanf
+    addi    $sp,        $sp,            64
+
+    li      $t0,        -1
+    beq     $t0,        $v0,            exit_prog
+    nop
+    jal     getchar
+
+    la      $v0,        input
+
+    lw      $ra,        0($sp)
+    addi    $sp,        $sp,            4
+    nop
+    jr      $ra
+
+exit_prog:
+    li      $v0,        4001
+    syscall
 
 READ:
-    addi $a0, $zero, input
-    addi $a1, $zero, 1024
-    addi $v0, $zero, 8 # read string > $a0 & size buffer = $a1
-    syscall
-    jr $ra
-
-EOF:
-    li $t0,0
-lEOF:
-    lb $t1, $t0($a0)
-
-    addi
-    jr $ra
+    addi    $sp,        $sp,            -4
+    sw      $ra,        0($sp)
+    nop
+    jal     read_line
+    lw      $ra,        0($sp)
+    addi    $sp,        $sp,            4
+    nop
+    jr      $ra
 
 EVAL:
-    jr $ra
+    addi    $sp,        $sp,            -4
+    sw      $ra,        0($sp)
+    move    $v0,        $a0
+    lw      $ra,        0($sp)
+    addi    $sp,        $sp,            4
+    nop
+    jr      $ra
 
 PRINT:
-    jr $ra
+    addi    $sp,        $sp,            -4
+    sw      $ra,        0($sp)
+    move    $a1,        $a0
+    la      $a0,        print_string
+    nop
+    jal     printf
+    lw      $ra,        0($sp)
+    addi    $sp,        $sp,            4
+    nop
+    jr      $ra
 
+    .global     main
+main:
 rep:
-    # prompt
-    addi $v0, $zero, 4 # print string
-    addi $a0, $zero, prompt
-    syscall
-    jal READ
-    jal EVAL
-    jal PRINT
-    j rep
+    #    addi    $sp,        $sp,    -4
+    #    sw      $ra,        0($sp)
+    la      $a0,        prompt
+    nop
+    jal     printf
+    nop
+    jal     READ
+    move    $a0,        $v0
+    nop
+    jal     EVAL
+    move    $a0,        $v0
+    nop
+    jal     PRINT
+    nop
+    j       rep
+    #    lw      $ra,        0($sp)
+    #    addi    $sp,        $sp,    4
+    #    nop
+    #    jr      $ra
+
+    .section    .data
+prompt:
+    .asciiz     "user>"
+scan_string:
+    .asciiz     "%4096[^\n]"
+print_string:
+    .asciiz     "%s\n"
+input:
+    .space      4096

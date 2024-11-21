@@ -1,2 +1,2 @@
 #!/bin/bash
-exec $(dirname $0)/${STEP:-stepA_mal} "${@}"
+exec qemu-mips-static $(dirname $0)/${STEP:-stepA_mal} "${@}"
