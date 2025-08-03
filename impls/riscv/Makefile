@@ -17,7 +17,7 @@ $(ALL_OBJ_FILES): $(ALL_ASM_FILES)
 	riscv64-elf-as -o $@ $<
 
 $(STEPS): $(ALL_OBJ_FILES)
-	riscv64-elf-gcc $(CC_FLAGS) -o $@ $< 
+	riscv64-elf-gcc $(CC_FLAGS) -o $@ $@.o $(ADDITIONALS_OBJ_FILES)
 
 .PHONY: clean
 clean:

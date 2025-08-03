@@ -8,7 +8,7 @@
 	.equiv STDIN, 0
 	.equiv STDOUT, 1
 
-#	.global _start
+	.global _start
 _start:
 	call rep
 	
