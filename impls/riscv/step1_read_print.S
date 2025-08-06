@@ -2,39 +2,13 @@
 	# - rep
 	# 	- READ
 	#		- readline
-	#		- read_str
 	#	- EVAL
 	#	- PRINT
 	#		- printline
-	#		- pr_str
 	# 	- write_prompt
 	# Utilities (at the end):
 	# - exit
 	# - strlen
-	# - alloc_item
-	# - free_item
-	# - alloc_list
-	# - free_list
-	# - string_to_list
-	# - list_to_string
-
-	# List will be linked forward and backward
-	# (simplier in the ways things can be done)
-	# The memory management sheme will be the following:
-	# | item 1 | item 2 | item 3 |
-	# We add item 4:
-	# | item 1 | item 2 | item 3 | item 4 |
-	# We remove item 2:
-	# | item 1 | item 4 | item 3 |
-	# It is done by following the number of items and
-	# by updating links between the items.
-	# We allocate the buffer containing the lists with mmap
-	# When there is not enough space, we allocate another one
-	# We use munmap to free the space
-
-	# We well use list to store everything like strings
-	# (a string will be a list of chars)
-	# It will be easier since like that we will not need another memory scheme
 	
 	.section .text
 
@@ -88,7 +62,7 @@ readline:
 	mv a1, s1
 	li a2, SIZE_INPUT-1
 	ecall
-	ble a0, x0, READ_exit
+	ble a0, x0, readline_exit
 	
 	add s1, s1, a0
 	sb x0, 0(s1)
@@ -103,12 +77,6 @@ readline_exit:
 	mv a0, x0
 	call exit
 
-	
-	# param: input string in a0
-	# ret: input string converted into a "list" structure in a0
-read_str:
-	
-	
 	# param: input string converted into a "list" structure in a0
 	# ret: output "list" structure that will be converted to a string in a0
 EVAL:
@@ -146,11 +114,6 @@ printline:
 	addi sp, sp, 8*2
 	ret
 
-	# param: output "list" structure that will be converted to a string in a0
-	# ret: output string in a0
-pr_str:
-	ret
-
 write_prompt:
 	li a7, SYSCALL_WRITE
 	li a0, STDOUT
@@ -177,10 +140,6 @@ strlen_loop:
 	mv a0, t0
 	ret
 
-alloc:
-
-free:
-	
 	.section .rodata
 
 prompt:	
